@@ -1,0 +1,17 @@
+td:hover {
+  cursor: pointer;
+}
+@media screen and (max-width: 600px) {
+  .table thead {
+    display: none;
+  }
+  .table td {
+    display: block;
+  }
+  .table td:before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: inline-block;
+    width: 6em;
+  }
+}

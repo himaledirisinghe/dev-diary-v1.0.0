@@ -224,3 +224,233 @@ Error in Terminal
 (Use `node --trace-warnings ...` to show where the warning was created)
 (node:7688) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 1)
 (node:7688) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+
+Rewrite the Class component as a Function component using React Hooks for '/client/src/components/Home.js'
+---
+>Class Component
+```javascript
+
+import React, { Component } from "react";
+import axios from "axios";
+
+export default class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      posts: [],
+    };
+  }
+  componentDidMount() {
+    this.retrievePosts();
+  }
+  retrievePosts() {
+    axios.get("http://localhost:8000/posts").then((res) => {
+      if (res.data.success) {
+        this.setState({
+          posts: res.data.existingPosts,
+        });
+        console.log(this.state.posts);
+      }
+    });
+  }
+  render() {
+    return (
+      <div className="container">
+        <h3>All Posts</h3>
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Topic</th>
+              <th scope="col">Description</th>
+              <th scope="col">Post Category</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.posts.map((post, index) => (
+              <tr key={post._id}>
+                <th scope="row">{index + 1}</th>
+                <td>
+                  <a
+                    href={`/post/${post._id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    {post.topic}
+                  </a>
+                </td>
+                <td>{post.description}</td>
+                <td>{post.postCategory}</td>
+                <td>
+                  <a className="btn btn-warning" href="#">
+                    <i className="fas fa-edit"></i>&nbsp;Edit
+                  </a>
+                  &nbsp;
+                  <a className="btn btn-danger" href="#">
+                    <i className="fas fa-trash-alt"></i>&nbsp;Delete
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <button className="btn btn-success">
+          <a href="/add" style={{ textDecoration: "none", color: "white" }}>
+            Create New Post
+          </a>
+        </button>
+      </div>
+    );
+  }
+}
+
+```
+>Function Component
+```javascript
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+const Home = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    retrievePosts();
+  }, []);
+
+  const retrievePosts = async () => {
+    const res = await axios.get("http://localhost:8000/posts");
+    if (res.data.success) {
+      setPosts(res.data.existingPosts);
+      console.log(posts);
+    }
+  };
+
+  return (
+    <div className="container">
+      <h3>All Posts</h3>
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Topic</th>
+            <th scope="col">Description</th>
+            <th scope="col">Post Category</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {posts.map((post, index) => (
+            <tr key={post._id}>
+              <th scope="row">{index + 1}</th>
+              <td>
+                <a
+                  href={`/post/${post._id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  {post.topic}
+                </a>
+              </td>
+              <td>{post.description}</td>
+              <td>{post.postCategory}</td>
+              <td>
+                <a className="btn btn-warning" href="#">
+                  <i className="fas fa-edit"></i>&nbsp;Edit
+                </a>
+                &nbsp;
+                <a className="btn btn-danger" href="#">
+                  <i className="fas fa-trash-alt"></i>&nbsp;Delete
+                </a>
+              </td>
+            </tr>
+          ))}
+        </tbody></table> <button className="btn btn-success">
+        <a href="/add" style={{ textDecoration: "none", color: "white" }}>
+          Create New Post
+        </a>  </button>
+    </div> );
+};
+
+export default Home;
+
+```
+
+We use the `useState` Hook to manage the `posts` state and the `useEffect` Hook to run the `retrievePosts` function when the component mounts. The `retrievePosts` function is defined as a regular function within the Function component.
+
+
+
+
+If you want to display data in a table in React and have it look like code with syntax highlighting, you can use a library like `react-syntax-highlighter`. This library provides a React component that can display code with syntax highlighting for various languages, including JavaScript.
+
+Here's an example that shows how to use `react-syntax-highlighter` to display data in a table with syntax highlighting:
+
+```jsx
+import React from 'react';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+
+function MyTable({ data }) {
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Column 1</th>
+          <th>Column 2</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((row, index) => (
+          <tr key={index}>
+            <td>{row.column1}</td>
+            <td>
+              {row.column2.startsWith('```javascript') && row.column2.endsWith('```') ? (
+                <SyntaxHighlighter language="javascript" style={docco}>
+                  {row.column2.slice(13, -3)}
+                </SyntaxHighlighter>
+              ) : (
+                row.column2
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+```
+
+This code creates a `MyTable` component that takes a `data` prop containing an array of objects representing the rows of the table. The component maps over the `data` array and generates a table row for each object.
+
+For the second column of the table, the component checks if the value of the `column2` field starts with `'```javascript'` and ends with `'```'`. If it does, the component uses the `SyntaxHighlighter` component from `react-syntax-highlighter` to display the contents of the `column2` field with JavaScript syntax highlighting. Otherwise, it displays the value of the `column2` field as plain text.
+
+You can customize the appearance of the syntax highlighting by passing different style objects to the `style` prop of the `SyntaxHighlighter` component. In this example, we're using the `docco` style from `react-syntax-highlighter/dist/esm/styles/hljs`, but there are many other styles available.
+
+
+previous code
+---
+```javascript
+  function filterData(posts, searchKey) {
+    const result = posts.filter((post) => {
+      return (
+        post.topic.toLowerCase().includes(searchKey) ||
+        post.description.toLowerCase().includes(searchKey) ||
+        post.postCategory.toLowerCase().includes(searchKey)
+      );
+    });
+    setPosts(result);
+  }
+```
+
+The code you provided is already using modern JavaScript features such as arrow functions and the `filter` method. One way to make the code more concise and readable is to use object destructuring to extract the properties from the `post` object and use the `some` method to check if any of the properties include the `searchKey`. Here's an example:
+
+```javascript
+function filterData(posts, searchKey) {
+    const result = posts.filter(({topic, description, postCategory}) => {
+      return [topic, description, postCategory].some(property =>
+        property.toLowerCase().includes(searchKey)
+      );
+    });
+    setPosts(result);
+}
+```
+

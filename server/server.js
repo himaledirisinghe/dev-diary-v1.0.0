@@ -6,14 +6,14 @@ const cors = require("cors");
 const app = express();
 
 //import routes
-const postRoutes = require('./routes/posts');
+const noteRoutes = require("./routes/notes");
 
 //app middleware
 app.use(bodyParser.json());
 app.use(cors());
 
 //route middleware
-app.use(postRoutes);
+app.use(noteRoutes);
 
 const PORT = 8000;
 const DB_URL =
